@@ -1,4 +1,3 @@
-```markdown
 # SlackBlocks for Airtable
 
 Elevate your Slack messages from Airtable with a touch of refinement. `slackblocks-4-airtable` is a script designed to enrich your notification game. By following a simple setup, you can send well-structured and visually appealing messages right from your Airtable base to Slack.
@@ -43,6 +42,3 @@ MIT
 ---
 
 Happy messaging!
-```
-
-This draft is structured to provide a clear overview, instructions, and an example. You might want to tweak it to better fit your project's specifics or add more sections if necessary.
