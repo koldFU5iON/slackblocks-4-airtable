@@ -67,7 +67,7 @@ Before sending messages to a live Slack channel, you might want to test the outp
 ```javascript
 // build for copy/paste to slack block kit builder
 console.log($.build(messageBlocks).message);
-
+```
 
 ## Contributing
 
