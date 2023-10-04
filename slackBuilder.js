@@ -7,13 +7,14 @@ class SlackBuilder {
     return Math.floor(Math.random() * 10000).toString();
   }
   build(object) {
-    return JSON.stringify({ blocks: object });
+    this.message = JSON.stringify({ blocks: object });
+    return this;
   }
 
-  async send(payload) {
+  async send() {
     //send to slack
     if (!this.webhook) throw new Error("No webhook set");
-    if (!payload) throw new Error("No payload set");
+    if (!this.message) throw new Error("No message set");
     
     try {
       await fetch(this.webhook, {
@@ -21,7 +22,7 @@ class SlackBuilder {
         headers: {
           "Content-Type": "application/json",
         },
-        body: payload,
+        body: this.message,
       });
     } catch (e) {
       throw e;
@@ -57,7 +58,6 @@ class SlackBuilder {
     };
   }
   mrkdwn(text, id = null) {
-    //if no id is set create a random number
     if (!id) id = this.getId();
 
     return {
@@ -111,8 +111,10 @@ class SlackBuilder {
   }
 }
 
-const $ = new SlackBuilder();
+const $ = new SlackBuilder("https://hooks.slack.com/services/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");
 
+
+// example usage
 let messageBlocks = [
   $.header("Hello World"),
   $.divider(),
@@ -125,6 +127,7 @@ let messageBlocks = [
   $.button("click here","btn_click", "https://google.com")
 ];
 
-message = $.build(messageBlocks);
+$.build(messageBlocks).send();
 
-console.log(message);
+
+// console.log(message);
