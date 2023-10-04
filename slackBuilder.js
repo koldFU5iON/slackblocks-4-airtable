@@ -15,7 +15,7 @@ class SlackBuilder {
     //send to slack
     if (!this.webhook) throw new Error("No webhook set");
     if (!this.message) throw new Error("No message set");
-    
+
     try {
       await fetch(this.webhook, {
         method: "POST",
@@ -25,6 +25,7 @@ class SlackBuilder {
         body: this.message,
       });
     } catch (e) {
+      console.error('Error sending message to slack', e)
       throw e;
     }
   }
@@ -111,23 +112,24 @@ class SlackBuilder {
   }
 }
 
-const $ = new SlackBuilder("https://hooks.slack.com/services/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");
-
+// replace 'webhook_url_here' with your webhook URL
+const $ = new SlackBuilder('webhook_url_here');
 
 // example usage
 let messageBlocks = [
-  $.header("Hello World"),
+  $.header("Success!"),
   $.divider(),
   $.mrkdwn(
-    "This is _markdown_ and I'm *emphasising stuff*, check it out <something.com|a link>"
+    "You have *successfully* delivered a slack message using <https://github.com/koldFU5iON/slackblocks-4-airtable/|slackblocks-4-airtable>. I hope you find it useful. \n_Please star the repo if you do_."
   ),
+  $.plainText("Have a great day!"),
   $.divider(),
-  $.mrkdwn("this is another markdown", "with it's own id"),
-  $.divider(),
-  $.button("click here","btn_click", "https://google.com")
+  $.image("https://i.pinimg.com/736x/4c/db/60/4cdb6055396941b5e52a9d93caed3e13.jpg", "Good Job!"),
+  $.button("Repo","btn_click", "https://github.com/koldFU5iON/slackblocks-4-airtable/")
 ];
 
+// build and send the message
 $.build(messageBlocks).send();
 
-
-// console.log(message);
+// build for copy/paste to slack block kit builder - https://app.slack.com/block-kit-builder/
+// console.message($.build(messageBlocks).message);
