@@ -1,0 +1,11 @@
+{
+  "name": "slackblocks",
+  "version": "1.0.0",
+  "description": "Elevate your Slack messages from Airtable with a touch of refinement. `slackblocks-4-airtable` is a script designed to enrich your notification game. By following a simple setup, you can send well-structured and visually appealing messages right from your Airtable base to Slack.",
+  "main": "slackBuilder.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

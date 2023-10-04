@@ -1,9 +1,31 @@
 class SlackBuilder {
+  constructor(webhook) {
+    this.webhook = webhook;
+    this.message = null;
+  }
   getId() {
     return Math.floor(Math.random() * 10000).toString();
   }
   build(object) {
     return JSON.stringify({ blocks: object });
+  }
+
+  async send(payload) {
+    //send to slack
+    if (!this.webhook) throw new Error("No webhook set");
+    if (!payload) throw new Error("No payload set");
+    
+    try {
+      await fetch(this.webhook, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: payload,
+      });
+    } catch (e) {
+      throw e;
+    }
   }
 
   plainText(text, id = null) {
