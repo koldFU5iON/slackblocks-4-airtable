@@ -67,19 +67,62 @@ class SlackBuilder {
     };
   }
 
+  /**
+   * Creates a section block with an overflow menu accessory.
+   *
+   * @param {string} descriptor - The text to display in the section block.
+   * @param {Array.<{name: string}>} [items=[]] - An array of objects representing the items in the overflow menu.
+   * Each object should have a `name` property. The array can have a maximum of five elements.
+   * @param {string} [id=null] - An optional identifier for the block. A new ID will be generated if not provided.
+   * @returns {Object} A section block object with an overflow menu accessory.
+   *
+   * @example
+   * overflow(
+   *   "Choose an option:",
+   *   [{name: "Option 1"}, {name: "Option 2"}, {name: "Option 3"}],
+   *   "example-block-id"
+   * );
+   */
+  overflow(descriptor, items = [], id = null) {
+    if (!id) id = this.getId();
+
+    const overflowItems = items.map((item, index) => ({
+      text: {
+        type: "plain_text",
+        text: item.name,
+        emoji: false,
+      },
+      value: (index + 1).toString(),
+    }));
+
+    return {
+      type: "section",
+      block_id: "overflow " + id,
+      text: {
+        type: "mrkdwn",
+        text: descriptor,
+      },
+      accessory: {
+        type: "overflow",
+        options: overflowItems,
+        action_id: "overflow-action",
+      },
+    };
+  }
+
   list(listName, items, style = "bullet", id = null) {
     if (!id) id = this.getId();
     if (!Array.isArray(items)) throw new Error("Items must be an array");
 
     items = items.map((item) => {
       return {
-          type: "rich_text_section",
-          elements: [
-            {
-              type: "text",
-              text: item,
-            }
-          ],
+        type: "rich_text_section",
+        elements: [
+          {
+            type: "text",
+            text: item,
+          },
+        ],
       };
     });
 
@@ -148,6 +191,40 @@ class SlackBuilder {
           action_id: "actionId-" + id,
         },
       ],
+    };
+  }
+
+  /**
+   * Transforms an array of button data into an action object containing button elements.
+   *
+   * @param {Array.<{text: string, id: string, url: string}>} buttons - An array of objects, each representing a button.
+   * @returns {Object} An actions object containing an array of button elements.
+   *
+   * @example
+   * buttonArray([
+   *   {text: 'Visit Website', id: 'website-button', url: 'https://example.com'},
+   *   {text: 'View on Airtable', id: 'airtable-button', url: 'https://airtable.com'}
+   * ]);
+   */
+  buttonArray(buttons) {
+    const elements = buttons.map((button) => {
+      const id = button.id || this.getId();
+      return {
+        type: "button",
+        text: {
+          type: "plain_text",
+          text: button.text,
+          emoji: true,
+        },
+        value: button.value,
+        url: button.url,
+        action_id: "actionId-" + id,
+      };
+    });
+
+    return {
+      type: "actions",
+      elements: elements,
     };
   }
 }
