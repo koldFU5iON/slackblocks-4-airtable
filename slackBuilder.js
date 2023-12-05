@@ -257,4 +257,4 @@ let messageBlocks = [
 $.build(messageBlocks).send();
 
 // build for copy/paste to slack block kit builder - https://app.slack.com/block-kit-builder/
-// console.message($.build(messageBlocks).message);
+// console.log($.build(messageBlocks).message);
