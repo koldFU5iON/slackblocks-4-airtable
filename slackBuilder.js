@@ -6,6 +6,18 @@ class SlackBuilder {
   getId() {
     return Math.floor(Math.random() * 10000).toString();
   }
+
+  test() {
+    if(!this.message) throw new Error("No message set, use .build() first");
+    const param = "#" + encodeURI(this.message);
+    const slackBlockKitBuilderUrl = "https://app.slack.com/block-kit-builder/T06AF9667";
+    console.log(slackBlockKitBuilderUrl + param)
+  }
+
+  print(){
+    console.log(this.message);
+  }
+
   build(object) {
     this.message = JSON.stringify({ blocks: object });
     return this;
@@ -254,7 +266,8 @@ let messageBlocks = [
 ];
 
 // build and send the message
-$.build(messageBlocks).send();
+// $.build(messageBlocks).send();
 
 // build for copy/paste to slack block kit builder - https://app.slack.com/block-kit-builder/
 // console.log($.build(messageBlocks).message);
+$.build(messageBlocks).test();
