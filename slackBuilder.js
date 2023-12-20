@@ -8,13 +8,14 @@ class SlackBuilder {
   }
 
   test() {
-    if(!this.message) throw new Error("No message set, use .build() first");
+    if (!this.message) throw new Error("No message set, use .build() first");
     const param = "#" + encodeURI(this.message);
-    const slackBlockKitBuilderUrl = "https://app.slack.com/block-kit-builder/T06AF9667";
-    console.log(slackBlockKitBuilderUrl + param)
+    const slackBlockKitBuilderUrl =
+      "https://app.slack.com/block-kit-builder/T06AF9667";
+    console.log(slackBlockKitBuilderUrl + param);
   }
 
-  print(){
+  print() {
     console.log(this.message);
   }
 
@@ -186,6 +187,21 @@ class SlackBuilder {
     };
   }
 
+  columns(contentBlock = []) {
+    contentBlock = contentBlock.map((content) => {
+      return {
+        type: "plain_text",
+        text: content,
+        emoji: true,
+      };
+    });
+
+    return {
+      type: "section",
+      fields: contentBlock,
+    };
+  }
+
   _elements(objElements) {
     return {
       type: objElements.elementType,
@@ -197,7 +213,7 @@ class SlackBuilder {
       style: objElements.style,
       action_id: objElements.action_id,
       value: objElements.value,
-      url: objElements.url
+      url: objElements.url,
     };
   }
 
@@ -208,26 +224,29 @@ class SlackBuilder {
       throw new Error("Maximum of 5 buttons can be added");
     }
     const requiredProperties = ["text", "action_id", "url"];
-    const missingProperties = requiredProperties.filter(key => !buttons[0].hasOwnProperty(key));
+    const missingProperties = requiredProperties.filter(
+      (key) => !buttons[0].hasOwnProperty(key)
+    );
 
     if (missingProperties.length) {
-      throw new Error(`Missing required properties: ${missingProperties.join(", ")}`);
+      throw new Error(
+        `Missing required properties: ${missingProperties.join(", ")}`
+      );
     }
 
     const elements = buttons.map((button) => {
-      return this._elements(
-        {
-          ...button,
-          elementType: "button",
-          text_type: "plain_text",
-          value: button.text.replace(/\s/g, "_").toLowerCase(),
-        });
+      return this._elements({
+        ...button,
+        elementType: "button",
+        text_type: "plain_text",
+        value: button.text.replace(/\s/g, "_").toLowerCase(),
+      });
     });
 
     return {
-			"type": "actions",
-			"elements": elements
-		};
+      type: "actions",
+      elements: elements,
+    };
   }
 }
 
@@ -238,13 +257,28 @@ const $ = new SlackBuilder("webhook_url_here");
 let messageBlocks = [
   $.header("Button Test!"),
   $.divider(),
-  $.buttons([{text: "Visit Website", action_id:"website-another-button", url:"https://example.com"}]),
-  $.buttons(
-    [
-      {text: "Visit Website", action_id: "website-button", url: "https://example.com", style: "primary"},  
-      {text: "View on Airtable", action_id: "airtable-button", url: "https://airtable.com"},
-    ]  
-  ),
+  $.columns(["Column 1", "Column 2", "Column 3"]),
+  $.divider(),
+  $.buttons([
+    {
+      text: "Visit Website",
+      action_id: "website-another-button",
+      url: "https://example.com",
+    },
+  ]),
+  $.buttons([
+    {
+      text: "Visit Website",
+      action_id: "website-button",
+      url: "https://example.com",
+      style: "primary",
+    },
+    {
+      text: "View on Airtable",
+      action_id: "airtable-button",
+      url: "https://airtable.com",
+    },
+  ]),
 ];
 
 // build and send the message
