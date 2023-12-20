@@ -123,6 +123,24 @@ class SlackBuilder {
     };
   }
 
+  /**
+   * Creates a rich text block with a list (either bulleted or numbered).
+   *
+   * @param {string} listName - The title or heading for the list.
+   * @param {Array.<string>} items - An array of strings representing each list item.
+   * @param {string} [style="bullet"] - The style of the list; can be 'bullet' or 'number'.
+   * @param {string} [id=null] - An optional identifier for the list block. A new ID will be generated if not provided.
+   * @returns {Object} A rich text block object representing the list.
+   *
+   * @example
+   * list(
+   *   "Task List",
+   *   ["Task 1", "Task 2", "Task 3"],
+   *   "bullet",
+   *   "task-list-id"
+   * );
+   */
+
   list(listName, items, style = "bullet", id = null) {
     if (!id) id = this.getId();
     if (!Array.isArray(items)) throw new Error("Items must be an array");
@@ -216,6 +234,29 @@ class SlackBuilder {
       url: objElements.url,
     };
   }
+
+  /**
+   * Creates a block of action elements with buttons.
+   *
+   * @param {Array.<{text: string, action_id: string, url: string, [style]: string}>} buttons - An array of objects representing the buttons. Each object must include 'text', 'action_id', and 'url' properties. Optionally, 'style' can be included to define button style.
+   * @throws {Error} Throws an error if 'buttons' is not an array or if any required property is missing.
+   * @returns {Object} An actions block object containing the specified buttons.
+   *
+   * @example
+   * buttons([
+   *   {
+   *     text: "Visit Website",
+   *     action_id: "website-button",
+   *     url: "https://example.com",
+   *     style: "primary"
+   *   },
+   *   {
+   *     text: "View on Airtable",
+   *     action_id: "airtable-button",
+   *     url: "https://airtable.com"
+   *   }
+   * ]);
+   */
 
   buttons(buttons) {
     if (!Array.isArray(buttons)) throw new Error("Buttons must be an array");
