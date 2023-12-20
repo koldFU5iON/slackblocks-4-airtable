@@ -291,40 +291,34 @@ class SlackBuilder {
   }
 }
 
-// replace 'webhook_url_here' with your webhook URL
-const $ = new SlackBuilder("webhook_url_here");
+// Replace 'your_webhook_url' with your actual Slack webhook URL
+const $ = new SlackBuilder('your_webhook_url');
 
-// example usage
+// Preparing the message blocks
 let messageBlocks = [
-  $.header("Button Test!"),
-  $.divider(),
-  $.columns(["Column 1", "Column 2", "Column 3"]),
-  $.divider(),
-  $.buttons([
+  $.header('🚀 Team Update!'), // Header with emoji
+  $.mrkdwn("Here's the *latest news* from our team:"), // Markdown section
+  $.divider(), // Divider
+  $.list('Upcoming Events', ['Hackathon - Jan 20', 'Team Meeting - Jan 25', 'Product Launch - Feb 1'], 'bullet'), // Bulleted list
+  $.divider(), // Another Divider
+  $.context('For more details, visit our team portal.'), // Context block
+  $.divider(), // Divider
+  $.buttons([ // Button
     {
-      text: "Visit Website",
-      action_id: "website-another-button",
-      url: "https://example.com",
-    },
+      text: 'Visit Our Wiki',
+      action_id: 'wiki-button',
+      url: 'https://your-wiki-url.com',
+    }
   ]),
-  $.buttons([
-    {
-      text: "Visit Website",
-      action_id: "website-button",
-      url: "https://example.com",
-      style: "primary",
-    },
-    {
-      text: "View on Airtable",
-      action_id: "airtable-button",
-      url: "https://airtable.com",
-    },
-  ]),
+  $.context('For more details, visit our team portal.') // Context block
 ];
 
-// build and send the message
-// $.build(messageBlocks).send();
+// Build the message
+$.build(messageBlocks); // you can appened .send() to send the message directly
 
-// build for copy/paste to slack block kit builder - https://app.slack.com/block-kit-builder/
-// console.log($.build(messageBlocks).message);
-$.build(messageBlocks).test();
+// For debugging: Print the message or test it
+// console.log($.message);
+$.test();
+
+// To send the message, uncomment the following line:
+// $.send();
