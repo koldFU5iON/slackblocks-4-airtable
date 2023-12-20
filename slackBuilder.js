@@ -186,58 +186,48 @@ class SlackBuilder {
     };
   }
 
-  button(text, value, url, id = null) {
-    if (!id) id = this.getId();
+  _elements(objElements) {
     return {
-      type: "actions",
-      elements: [
-        {
-          type: "button",
-          text: {
-            type: "plain_text",
-            text: text,
-            emoji: true,
-          },
-          value: value,
-          url: url,
-          action_id: "actionId-" + id,
-        },
-      ],
+      type: objElements.elementType,
+      text: {
+        type: objElements.text_type,
+        text: objElements.text,
+        emoji: true,
+      },
+      style: objElements.style,
+      action_id: objElements.action_id,
+      value: objElements.value,
+      url: objElements.url
     };
   }
 
-  /**
-   * Transforms an array of button data into an action object containing button elements.
-   *
-   * @param {Array.<{text: string, id: string, url: string}>} buttons - An array of objects, each representing a button.
-   * @returns {Object} An actions object containing an array of button elements.
-   *
-   * @example
-   * buttonArray([
-   *   {text: 'Visit Website', id: 'website-button', url: 'https://example.com'},
-   *   {text: 'View on Airtable', id: 'airtable-button', url: 'https://airtable.com'}
-   * ]);
-   */
-  buttonArray(buttons) {
+  buttons(buttons) {
+    if (!Array.isArray(buttons)) throw new Error("Buttons must be an array");
+
+    if (buttons.length > 5) {
+      throw new Error("Maximum of 5 buttons can be added");
+    }
+    const requiredProperties = ["text", "action_id", "url"];
+    const missingProperties = requiredProperties.filter(key => !buttons[0].hasOwnProperty(key));
+
+    if (missingProperties.length) {
+      throw new Error(`Missing required properties: ${missingProperties.join(", ")}`);
+    }
+
     const elements = buttons.map((button) => {
-      const id = button.id || this.getId();
-      return {
-        type: "button",
-        text: {
-          type: "plain_text",
-          text: button.text,
-          emoji: true,
-        },
-        value: button.value,
-        url: button.url,
-        action_id: "actionId-" + id,
-      };
+      return this._elements(
+        {
+          ...button,
+          elementType: "button",
+          text_type: "plain_text",
+          value: button.text.replace(/\s/g, "_").toLowerCase(),
+        });
     });
 
     return {
-      type: "actions",
-      elements: elements,
-    };
+			"type": "actions",
+			"elements": elements
+		};
   }
 }
 
@@ -246,22 +236,14 @@ const $ = new SlackBuilder("webhook_url_here");
 
 // example usage
 let messageBlocks = [
-  $.header("Success!"),
+  $.header("Button Test!"),
   $.divider(),
-  $.mrkdwn(
-    "You have *successfully* delivered a slack message using <https://github.com/koldFU5iON/slackblocks-4-airtable/|slackblocks-4-airtable>. I hope you find it useful. \n_Please star the repo if you do_."
-  ),
-  $.plainText("Have a great day!"),
-  $.list("List", ["Item 1", "Item 2", "Item 3"]),
-  $.divider(),
-  $.image(
-    "https://i.pinimg.com/736x/4c/db/60/4cdb6055396941b5e52a9d93caed3e13.jpg",
-    "Good Job!"
-  ),
-  $.button(
-    "Repo",
-    "btn_click",
-    "https://github.com/koldFU5iON/slackblocks-4-airtable/"
+  $.buttons([{text: "Visit Website", action_id:"website-another-button", url:"https://example.com"}]),
+  $.buttons(
+    [
+      {text: "Visit Website", action_id: "website-button", url: "https://example.com", style: "primary"},  
+      {text: "View on Airtable", action_id: "airtable-button", url: "https://airtable.com"},
+    ]  
   ),
 ];
 
