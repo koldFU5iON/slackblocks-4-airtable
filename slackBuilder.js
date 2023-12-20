@@ -292,25 +292,30 @@ class SlackBuilder {
 }
 
 // Replace 'your_webhook_url' with your actual Slack webhook URL
-const $ = new SlackBuilder('your_webhook_url');
+const $ = new SlackBuilder("your_webhook_url");
 
 // Preparing the message blocks
 let messageBlocks = [
-  $.header('🚀 Team Update!'), // Header with emoji
+  $.header("🚀 Team Update!"), // Header with emoji
   $.mrkdwn("Here's the *latest news* from our team:"), // Markdown section
   $.divider(), // Divider
-  $.list('Upcoming Events', ['Hackathon - Jan 20', 'Team Meeting - Jan 25', 'Product Launch - Feb 1'], 'bullet'), // Bulleted list
+  $.list(
+    "Upcoming Events",
+    ["Hackathon - Jan 20", "Team Meeting - Jan 25", "Product Launch - Feb 1"],
+    "bullet"
+  ), // Bulleted list
   $.divider(), // Another Divider
-  $.context('For more details, visit our team portal.'), // Context block
+  $.context("For more details, visit our team portal."), // Context block
   $.divider(), // Divider
-  $.buttons([ // Button
+  $.buttons([
+    // Button
     {
-      text: 'Visit Our Wiki',
-      action_id: 'wiki-button',
-      url: 'https://your-wiki-url.com',
-    }
+      text: "Visit Our Wiki",
+      action_id: "wiki-button",
+      url: "https://your-wiki-url.com",
+    },
   ]),
-  $.context('For more details, visit our team portal.') // Context block
+  $.context("For more details, visit our team portal."), // Context block
 ];
 
 // Build the message
